@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 8c4c901a060383a4c8c0e2cd8b903fb1
   - enabled: 1
+    path: Assets/Scenes/LoopHallway.unity
+    guid: 1a35c5f5046ddcb44af9e8a9fd2f3526
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:

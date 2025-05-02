@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class MainMenuButtons : MonoBehaviour
 {
     public void startButton()
-    { SceneManager.LoadScene("SampleScene"); }
+    { SceneManager.LoadScene("LoopHallway"); }
 
     public void quitButton()
     { UnityEditor.EditorApplication.isPlaying = false;
