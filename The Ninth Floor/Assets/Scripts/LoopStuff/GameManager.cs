@@ -12,10 +12,11 @@ public class GameManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    public void AdvanceFloor()
+    public void OnForwardTrigger()
     {
         if (anomalyActive)
         {
+            Debug.Log("Have anomaly.");
             currentFloor = 9;
         }
         else
@@ -24,5 +25,12 @@ public class GameManager : MonoBehaviour
         }
         Debug.Log("Now on floor: " + currentFloor);
         anomalyActive = false; // Reset for next floor
+    }
+
+    public void OnBackwardTrigger()
+    {
+        currentFloor--;
+        Debug.Log("Player walked back. Now on floor: " + currentFloor);
+        // Optional: reset anomaly, play sound, or just allow re-entry
     }
 }
