@@ -5,7 +5,6 @@ public class AnomalySpawner : MonoBehaviour
     public GameObject[] anomalyPrefabs; // Assign in Inspector
     public Transform[] spawnPoints;     // Array of possible spawn locations
     [Range(0f, 1f)] public float spawnChance = 1f;
-    public string hallwayName;
 
     private GameObject currentAnomaly;
 
