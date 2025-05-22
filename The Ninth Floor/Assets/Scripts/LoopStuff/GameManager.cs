@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
         anomalyActive = false;
 
         FindFirstObjectByType<FloorDisplay>().UpdateFloorDisplay(); // Refresh the display
+        EvidenceManager.Instance.TrySpawnEvidenceForFloor(currentFloor);
+
     }
 
 
@@ -37,6 +39,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("Player walked back. Now on floor: " + currentFloor);
 
         FindFirstObjectByType<FloorDisplay>().UpdateFloorDisplay(); // Refresh the display
+        EvidenceManager.Instance.TrySpawnEvidenceForFloor(currentFloor);
+
     }
 
 }
