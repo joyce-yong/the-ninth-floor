@@ -3,7 +3,7 @@ using UnityEngine;
 public class NewPlayerTeleporter : MonoBehaviour
 {
     public Transform TeleportZoneObject;
-    public AnomalySpawner anomalySpawner;
+    public SpawnAnomaly anomalySpawner;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -26,7 +26,7 @@ public class NewPlayerTeleporter : MonoBehaviour
                 GameManager.Instance.OnForwardTrigger();
 
                 // Spawn anomaly for next floor
-                anomalySpawner.TrySpawnAnomaly();
+               anomalySpawner.TrySpawnAnomalies();
             }
         }
     }
