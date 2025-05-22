@@ -21,7 +21,8 @@ public class EvidenceManager : MonoBehaviour
     private HashSet<int> spawnedFloors = new();
     public Text popupText;
 
-    private int collectedCount = 0;
+    private HashSet<int> collectedFloors = new();
+
     private List<GameObject> spawnedEvidenceObjects = new();
 
     private void Awake()
@@ -59,11 +60,23 @@ public class EvidenceManager : MonoBehaviour
 
     public void CollectEvidence(GameObject evidenceObject)
     {
-        collectedCount++;
         Destroy(evidenceObject);
-        ShowPopup($"{collectedCount} / {evidences.Length} evidences collected.");
-        Debug.Log($"Collected evidence: {collectedCount} / {evidences.Length}");
+
+        // Try to determine which floor this evidence belongs to
+        foreach (var evidence in evidences)
+        {
+            if ((evidence.spawnPoint1 != null && Vector3.Distance(evidence.spawnPoint1.position, evidenceObject.transform.position) < 0.1f) ||
+                (evidence.spawnPoint2 != null && Vector3.Distance(evidence.spawnPoint2.position, evidenceObject.transform.position) < 0.1f))
+            {
+                collectedFloors.Add(evidence.floorNumber);
+                break;
+            }
+        }
+
+        ShowPopup($"{collectedFloors.Count} / {evidences.Length} evidences collected.");
+        Debug.Log($"Collected evidence: {collectedFloors.Count} / {evidences.Length}");
     }
+
 
     private void ShowPopup(string message)
     {
