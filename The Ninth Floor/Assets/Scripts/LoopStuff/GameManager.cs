@@ -23,14 +23,20 @@ public class GameManager : MonoBehaviour
         {
             currentFloor--;
         }
+
         Debug.Log("Now on floor: " + currentFloor);
-        anomalyActive = false; // Reset for next floor
+        anomalyActive = false;
+
+        FindFirstObjectByType<FloorDisplay>().UpdateFloorDisplay(); // Refresh the display
     }
+
 
     public void OnBackwardTrigger()
     {
         currentFloor--;
         Debug.Log("Player walked back. Now on floor: " + currentFloor);
-        // Optional: reset anomaly, play sound, or just allow re-entry
+
+        FindFirstObjectByType<FloorDisplay>().UpdateFloorDisplay(); // Refresh the display
     }
+
 }
