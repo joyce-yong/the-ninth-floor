@@ -22,6 +22,7 @@ public class EvidenceManager : MonoBehaviour
 
     private HashSet<int> spawnedFloors = new();
     private HashSet<int> collectedFloors = new();
+    private List<Vector3> collectedEvidencePositions = new(); // Use position instead of GameObject
 
     private List<GameObject> spawnedEvidenceObjects = new();
 
@@ -33,78 +34,24 @@ public class EvidenceManager : MonoBehaviour
 
     public void CollectEvidence(GameObject evidenceObject)
     {
-        EvidenceInfo matchedEvidence = null;
+        Vector3 collectedPos = evidenceObject.transform.position;
+        collectedEvidencePositions.Add(collectedPos);
 
-        // Match collected object to its spawn location
+        // Determine the floor this evidence belongs to and mark as collected
         foreach (var evidence in evidences)
         {
-            if ((evidence.spawnPoint1 != null && Vector3.Distance(evidence.spawnPoint1.position, evidenceObject.transform.position) < 1f) ||
-                (evidence.spawnPoint2 != null && Vector3.Distance(evidence.spawnPoint2.position, evidenceObject.transform.position) < 1f))
+            if ((evidence.spawnPoint1 != null && Vector3.Distance(evidence.spawnPoint1.position, collectedPos) < 1.0f) ||
+                (evidence.spawnPoint2 != null && Vector3.Distance(evidence.spawnPoint2.position, collectedPos) < 1.0f))
             {
-                matchedEvidence = evidence;
+                collectedFloors.Add(evidence.floorNumber);
                 break;
             }
         }
 
-        if (matchedEvidence == null)
-        {
-            Debug.LogWarning("Collected evidence doesn't match any floor.");
-            return;
-        }
-
-        int floor = matchedEvidence.floorNumber;
-
-        // Add floor to collected set (only once)
-        if (!collectedFloors.Contains(floor))
-        {
-            collectedFloors.Add(floor);
-        }
-
-        // Destroy all evidence objects related to this floor
-        for (int i = spawnedEvidenceObjects.Count - 1; i >= 0; i--)
-        {
-            GameObject obj = spawnedEvidenceObjects[i];
-            if ((matchedEvidence.spawnPoint1 != null && Vector3.Distance(obj.transform.position, matchedEvidence.spawnPoint1.position) < 0.1f) ||
-                (matchedEvidence.spawnPoint2 != null && Vector3.Distance(obj.transform.position, matchedEvidence.spawnPoint2.position) < 0.1f))
-            {
-                Destroy(obj);
-                spawnedEvidenceObjects.RemoveAt(i);
-            }
-        }
-
-        Destroy(evidenceObject); // destroy clicked evidence
+        Destroy(evidenceObject);
 
         ShowPopup($"{collectedFloors.Count} / {evidences.Length} evidences collected.");
         Debug.Log($"Collected evidence: {collectedFloors.Count} / {evidences.Length}");
-    }
-
-    public void TrySpawnEvidenceForFloor(int floor)
-    {
-        if (spawnedFloors.Contains(floor) || collectedFloors.Contains(floor))
-            return;
-
-        foreach (var evidence in evidences)
-        {
-            if (evidence.floorNumber == floor && evidence.displayPrefab != null)
-            {
-                if (evidence.spawnPoint1 != null)
-                {
-                    var obj1 = Instantiate(evidence.displayPrefab, evidence.spawnPoint1.position, evidence.spawnPoint1.rotation);
-                    spawnedEvidenceObjects.Add(obj1);
-                    Debug.Log($"Evidence spawned on floor {floor} (Spawn 1)");
-                }
-
-                if (evidence.spawnPoint2 != null)
-                {
-                    var obj2 = Instantiate(evidence.displayPrefab, evidence.spawnPoint2.position, evidence.spawnPoint2.rotation);
-                    spawnedEvidenceObjects.Add(obj2);
-                    Debug.Log($"Evidence spawned on floor {floor} (Spawn 2)");
-                }
-
-                spawnedFloors.Add(floor);
-                break;
-            }
-        }
     }
 
     private void ShowPopup(string message)
@@ -126,5 +73,43 @@ public class EvidenceManager : MonoBehaviour
             evidencePopupUI.alpha -= Time.deltaTime;
             yield return null;
         }
+    }
+
+    public void TrySpawnEvidenceForFloor(int floor)
+    {
+        if (spawnedFloors.Contains(floor) || collectedFloors.Contains(floor)) return;
+
+        foreach (var evidence in evidences)
+        {
+            if (evidence.floorNumber == floor && evidence.displayPrefab != null)
+            {
+                if (evidence.spawnPoint1 != null && !IsEvidenceAlreadyCollected(evidence.spawnPoint1.position))
+                {
+                    var obj1 = Instantiate(evidence.displayPrefab, evidence.spawnPoint1.position, evidence.spawnPoint1.rotation);
+                    spawnedEvidenceObjects.Add(obj1);
+                    Debug.Log($"Evidence spawned on floor {floor} (Spawn 1)");
+                }
+
+                if (evidence.spawnPoint2 != null && !IsEvidenceAlreadyCollected(evidence.spawnPoint2.position))
+                {
+                    var obj2 = Instantiate(evidence.displayPrefab, evidence.spawnPoint2.position, evidence.spawnPoint2.rotation);
+                    spawnedEvidenceObjects.Add(obj2);
+                    Debug.Log($"Evidence spawned on floor {floor} (Spawn 2)");
+                }
+
+                spawnedFloors.Add(floor);
+                break;
+            }
+        }
+    }
+
+    private bool IsEvidenceAlreadyCollected(Vector3 spawnPos)
+    {
+        foreach (var pos in collectedEvidencePositions)
+        {
+            if (Vector3.Distance(pos, spawnPos) < 0.1f)
+                return true;
+        }
+        return false;
     }
 }
