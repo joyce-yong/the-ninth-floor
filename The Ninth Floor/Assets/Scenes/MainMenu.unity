@@ -662,7 +662,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 21300000, guid: dc926058022673c4189abafb0e193d51, type: 3}
     m_PressedSprite: {fileID: 21300000, guid: 948cf4e966bd2df4d94ebd7f7f273cef, type: 3}
     m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 21300000, guid: 948cf4e966bd2df4d94ebd7f7f273cef, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -1202,7 +1202,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 21300000, guid: 1f4120e764fd62541a55d4740c460c00, type: 3}
     m_PressedSprite: {fileID: 21300000, guid: 4382447b1952f4247bb5cb38eea13091, type: 3}
     m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 21300000, guid: 1f4120e764fd62541a55d4740c460c00, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -1233,6 +1233,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1411753218}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

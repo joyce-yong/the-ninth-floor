@@ -66,6 +66,13 @@ public class UISpritesSize : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         rectTransform.sizeDelta = size;
         rectTransform.anchoredPosition = originalPosition + offset;
     }
+    private void OnDisable()
+    {
+        isHovered = false;
+        isPressed = false;
+        ApplyState(normalSprite, normalSize, normalOffset);
+    }
+
 
     private void Start()
     {
