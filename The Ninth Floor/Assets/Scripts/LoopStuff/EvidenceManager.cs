@@ -22,8 +22,9 @@ public class EvidenceManager : MonoBehaviour
 
     private HashSet<int> spawnedFloors = new();
     private HashSet<int> collectedFloors = new();
-
     private List<GameObject> spawnedEvidenceObjects = new();
+
+    private int currentFloor = -1;
 
     private void Awake()
     {
@@ -58,6 +59,7 @@ public class EvidenceManager : MonoBehaviour
         if (!collectedFloors.Contains(floor))
         {
             collectedFloors.Add(floor);
+            Debug.Log("Collected Floors: " + string.Join(", ", collectedFloors));
         }
 
         // Destroy all evidence objects related to this floor
@@ -74,7 +76,7 @@ public class EvidenceManager : MonoBehaviour
 
         Destroy(evidenceObject); // destroy clicked evidence
 
-        ShowPopup($"{collectedFloors.Count} / {evidences.Length} evidences collected.");
+        ShowPopup($"{collectedFloors.Count} / {evidences.Length}");
         Debug.Log($"Collected evidence: {collectedFloors.Count} / {evidences.Length}");
     }
 
@@ -105,6 +107,27 @@ public class EvidenceManager : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public void OnPlayerEnterFloor(int newFloor)
+    {
+        if (newFloor == currentFloor)
+            return;
+
+        currentFloor = newFloor;
+
+        // Despawn all current evidence objects
+        for (int i = spawnedEvidenceObjects.Count - 1; i >= 0; i--)
+        {
+            Destroy(spawnedEvidenceObjects[i]);
+            spawnedEvidenceObjects.RemoveAt(i);
+        }
+
+        // Allow respawning this floor again in case player returns
+        spawnedFloors.Remove(newFloor);
+
+        // Try spawning if not collected
+        TrySpawnEvidenceForFloor(newFloor);
     }
 
     private void ShowPopup(string message)
