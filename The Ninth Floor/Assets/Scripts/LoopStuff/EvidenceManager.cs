@@ -35,6 +35,7 @@ public class EvidenceManager : MonoBehaviour
     private void Start()
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
         Vector3 collectedPos = evidenceObject.transform.position;
         collectedEvidencePositions.Add(collectedPos);
 
@@ -56,6 +57,19 @@ public class EvidenceManager : MonoBehaviour
 
             if (evidence.spawnPoint1 != null)
             {
+=======
+        //SpawnEvidences();
+    }
+
+    private void SpawnEvidences()
+    {
+        foreach (var evidence in evidences)
+        {
+            if (evidence.displayPrefab == null) continue;
+
+            if (evidence.spawnPoint1 != null)
+            {
+>>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
                 var obj1 = Instantiate(evidence.displayPrefab, evidence.spawnPoint1.position, evidence.spawnPoint1.rotation);
                 spawnedEvidenceObjects.Add(obj1);
                 Debug.Log($"Evidence spawned on floor {evidence.floorNumber} (Spawn 1)");
@@ -80,6 +94,9 @@ public class EvidenceManager : MonoBehaviour
             if ((evidence.spawnPoint1 != null && Vector3.Distance(evidence.spawnPoint1.position, evidenceObject.transform.position) < 0.1f) ||
                 (evidence.spawnPoint2 != null && Vector3.Distance(evidence.spawnPoint2.position, evidenceObject.transform.position) < 0.1f))
             {
+<<<<<<< HEAD
+>>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
+=======
 >>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
                 collectedFloors.Add(evidence.floorNumber);
                 break;
@@ -87,8 +104,11 @@ public class EvidenceManager : MonoBehaviour
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         Destroy(evidenceObject);
 
+=======
+>>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
 =======
 >>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
         ShowPopup($"{collectedFloors.Count} / {evidences.Length} evidences collected.");
@@ -96,7 +116,10 @@ public class EvidenceManager : MonoBehaviour
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
 
 >>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
     private void ShowPopup(string message)
@@ -123,7 +146,11 @@ public class EvidenceManager : MonoBehaviour
     public void TrySpawnEvidenceForFloor(int floor)
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (spawnedFloors.Contains(floor) || collectedFloors.Contains(floor)) return;
+=======
+        if (spawnedFloors.Contains(floor)) return;
+>>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
 =======
         if (spawnedFloors.Contains(floor)) return;
 >>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
@@ -133,7 +160,11 @@ public class EvidenceManager : MonoBehaviour
             if (evidence.floorNumber == floor && evidence.displayPrefab != null)
             {
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if (evidence.spawnPoint1 != null && !IsEvidenceAlreadyCollected(evidence.spawnPoint1.position))
+=======
+                if (evidence.spawnPoint1 != null)
+>>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
 =======
                 if (evidence.spawnPoint1 != null)
 >>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
@@ -144,7 +175,11 @@ public class EvidenceManager : MonoBehaviour
                 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if (evidence.spawnPoint2 != null && !IsEvidenceAlreadyCollected(evidence.spawnPoint2.position))
+=======
+                if (evidence.spawnPoint2 != null)
+>>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
 =======
                 if (evidence.spawnPoint2 != null)
 >>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
@@ -155,6 +190,10 @@ public class EvidenceManager : MonoBehaviour
                 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
 =======
 
 >>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
@@ -163,6 +202,7 @@ public class EvidenceManager : MonoBehaviour
             }
         }
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
 
     private bool IsEvidenceAlreadyCollected(Vector3 spawnPos)
@@ -174,6 +214,8 @@ public class EvidenceManager : MonoBehaviour
         }
         return false;
     }
+=======
+>>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
 =======
 >>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
 }
