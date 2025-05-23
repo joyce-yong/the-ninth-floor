@@ -10,19 +10,18 @@ public class EvidenceManager : MonoBehaviour
     {
         public int floorNumber;
         public GameObject displayPrefab;
-        public Transform spawnPoint1; 
-        public Transform spawnPoint2; 
+        public Transform spawnPoint1;
+        public Transform spawnPoint2;
     }
 
     public static EvidenceManager Instance;
 
     public EvidenceInfo[] evidences;
     public CanvasGroup evidencePopupUI;
-    private HashSet<int> spawnedFloors = new();
     public Text popupText;
 
+    private HashSet<int> spawnedFloors = new();
     private HashSet<int> collectedFloors = new();
-    private List<Vector3> collectedEvidencePositions = new(); // Use position instead of GameObject
 
     private List<GameObject> spawnedEvidenceObjects = new();
 
@@ -32,96 +31,82 @@ public class EvidenceManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    private void Start()
-    {
-<<<<<<< HEAD
-<<<<<<< HEAD
-        Vector3 collectedPos = evidenceObject.transform.position;
-        collectedEvidencePositions.Add(collectedPos);
-
-        // Determine the floor this evidence belongs to and mark as collected
-        foreach (var evidence in evidences)
-        {
-            if ((evidence.spawnPoint1 != null && Vector3.Distance(evidence.spawnPoint1.position, collectedPos) < 1.0f) ||
-                (evidence.spawnPoint2 != null && Vector3.Distance(evidence.spawnPoint2.position, collectedPos) < 1.0f))
-            {
-=======
-        //SpawnEvidences();
-    }
-
-    private void SpawnEvidences()
-    {
-        foreach (var evidence in evidences)
-        {
-            if (evidence.displayPrefab == null) continue;
-
-            if (evidence.spawnPoint1 != null)
-            {
-=======
-        //SpawnEvidences();
-    }
-
-    private void SpawnEvidences()
-    {
-        foreach (var evidence in evidences)
-        {
-            if (evidence.displayPrefab == null) continue;
-
-            if (evidence.spawnPoint1 != null)
-            {
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
-                var obj1 = Instantiate(evidence.displayPrefab, evidence.spawnPoint1.position, evidence.spawnPoint1.rotation);
-                spawnedEvidenceObjects.Add(obj1);
-                Debug.Log($"Evidence spawned on floor {evidence.floorNumber} (Spawn 1)");
-            }
-
-            if (evidence.spawnPoint2 != null)
-            {
-                var obj2 = Instantiate(evidence.displayPrefab, evidence.spawnPoint2.position, evidence.spawnPoint2.rotation);
-                spawnedEvidenceObjects.Add(obj2);
-                Debug.Log($"Evidence spawned on floor {evidence.floorNumber} (Spawn 2)");
-            }
-        }
-    }
-
     public void CollectEvidence(GameObject evidenceObject)
     {
-        Destroy(evidenceObject);
+        EvidenceInfo matchedEvidence = null;
 
-        // Try to determine which floor this evidence belongs to
+        // Match collected object to its spawn location
         foreach (var evidence in evidences)
         {
-            if ((evidence.spawnPoint1 != null && Vector3.Distance(evidence.spawnPoint1.position, evidenceObject.transform.position) < 0.1f) ||
-                (evidence.spawnPoint2 != null && Vector3.Distance(evidence.spawnPoint2.position, evidenceObject.transform.position) < 0.1f))
+            if ((evidence.spawnPoint1 != null && Vector3.Distance(evidence.spawnPoint1.position, evidenceObject.transform.position) < 1f) ||
+                (evidence.spawnPoint2 != null && Vector3.Distance(evidence.spawnPoint2.position, evidenceObject.transform.position) < 1f))
             {
-<<<<<<< HEAD
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
-=======
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
-                collectedFloors.Add(evidence.floorNumber);
+                matchedEvidence = evidence;
                 break;
             }
         }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        Destroy(evidenceObject);
+        if (matchedEvidence == null)
+        {
+            Debug.LogWarning("Collected evidence doesn't match any floor.");
+            return;
+        }
 
-=======
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
-=======
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
+        int floor = matchedEvidence.floorNumber;
+
+        // Add floor to collected set (only once)
+        if (!collectedFloors.Contains(floor))
+        {
+            collectedFloors.Add(floor);
+        }
+
+        // Destroy all evidence objects related to this floor
+        for (int i = spawnedEvidenceObjects.Count - 1; i >= 0; i--)
+        {
+            GameObject obj = spawnedEvidenceObjects[i];
+            if ((matchedEvidence.spawnPoint1 != null && Vector3.Distance(obj.transform.position, matchedEvidence.spawnPoint1.position) < 0.1f) ||
+                (matchedEvidence.spawnPoint2 != null && Vector3.Distance(obj.transform.position, matchedEvidence.spawnPoint2.position) < 0.1f))
+            {
+                Destroy(obj);
+                spawnedEvidenceObjects.RemoveAt(i);
+            }
+        }
+
+        Destroy(evidenceObject); // destroy clicked evidence
+
         ShowPopup($"{collectedFloors.Count} / {evidences.Length} evidences collected.");
         Debug.Log($"Collected evidence: {collectedFloors.Count} / {evidences.Length}");
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
+    public void TrySpawnEvidenceForFloor(int floor)
+    {
+        if (spawnedFloors.Contains(floor) || collectedFloors.Contains(floor))
+            return;
 
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
+        foreach (var evidence in evidences)
+        {
+            if (evidence.floorNumber == floor && evidence.displayPrefab != null)
+            {
+                if (evidence.spawnPoint1 != null)
+                {
+                    var obj1 = Instantiate(evidence.displayPrefab, evidence.spawnPoint1.position, evidence.spawnPoint1.rotation);
+                    spawnedEvidenceObjects.Add(obj1);
+                    Debug.Log($"Evidence spawned on floor {floor} (Spawn 1)");
+                }
+
+                if (evidence.spawnPoint2 != null)
+                {
+                    var obj2 = Instantiate(evidence.displayPrefab, evidence.spawnPoint2.position, evidence.spawnPoint2.rotation);
+                    spawnedEvidenceObjects.Add(obj2);
+                    Debug.Log($"Evidence spawned on floor {floor} (Spawn 2)");
+                }
+
+                spawnedFloors.Add(floor);
+                break;
+            }
+        }
+    }
+
     private void ShowPopup(string message)
     {
         if (popupText != null)
@@ -142,80 +127,4 @@ public class EvidenceManager : MonoBehaviour
             yield return null;
         }
     }
-
-    public void TrySpawnEvidenceForFloor(int floor)
-    {
-<<<<<<< HEAD
-<<<<<<< HEAD
-        if (spawnedFloors.Contains(floor) || collectedFloors.Contains(floor)) return;
-=======
-        if (spawnedFloors.Contains(floor)) return;
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
-=======
-        if (spawnedFloors.Contains(floor)) return;
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
-
-        foreach (var evidence in evidences)
-        {
-            if (evidence.floorNumber == floor && evidence.displayPrefab != null)
-            {
-<<<<<<< HEAD
-<<<<<<< HEAD
-                if (evidence.spawnPoint1 != null && !IsEvidenceAlreadyCollected(evidence.spawnPoint1.position))
-=======
-                if (evidence.spawnPoint1 != null)
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
-=======
-                if (evidence.spawnPoint1 != null)
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
-                {
-                    var obj1 = Instantiate(evidence.displayPrefab, evidence.spawnPoint1.position, evidence.spawnPoint1.rotation);
-                    spawnedEvidenceObjects.Add(obj1);
-                    Debug.Log($"Evidence spawned on floor {floor} (Spawn 1)");
-                }
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-                if (evidence.spawnPoint2 != null && !IsEvidenceAlreadyCollected(evidence.spawnPoint2.position))
-=======
-                if (evidence.spawnPoint2 != null)
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
-=======
-                if (evidence.spawnPoint2 != null)
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
-                {
-                    var obj2 = Instantiate(evidence.displayPrefab, evidence.spawnPoint2.position, evidence.spawnPoint2.rotation);
-                    spawnedEvidenceObjects.Add(obj2);
-                    Debug.Log($"Evidence spawned on floor {floor} (Spawn 2)");
-                }
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
-=======
-
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
-                spawnedFloors.Add(floor);
-                break;
-            }
-        }
-    }
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-    private bool IsEvidenceAlreadyCollected(Vector3 spawnPos)
-    {
-        foreach (var pos in collectedEvidencePositions)
-        {
-            if (Vector3.Distance(pos, spawnPos) < 0.1f)
-                return true;
-        }
-        return false;
-    }
-=======
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
-=======
->>>>>>> parent of 636adaa9 (fixed some evidence spawning bugs, but pop up not fixed yet)
 }
